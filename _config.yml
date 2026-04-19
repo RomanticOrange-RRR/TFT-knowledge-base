@@ -2,6 +2,13 @@ title: TFT ナレッジベース
 description: Discordから収集したTFTのナレッジ集
 theme: minima
 lang: ja
+baseurl: /TFT-knowledge-base
 
 minima:
   skin: dark
+
+defaults:
+  - scope:
+      path: "knowledge"
+    values:
+      layout: knowledge

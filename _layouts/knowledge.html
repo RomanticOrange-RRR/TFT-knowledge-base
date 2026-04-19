@@ -1,0 +1,51 @@
+---
+layout: default
+---
+<style>
+  .back-link { margin-bottom: 1.5rem; }
+  .knowledge-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #e8a87c;
+    background: rgba(255,255,255,0.04);
+    font-size: 0.9rem;
+  }
+  .knowledge-meta span { white-space: nowrap; }
+  .source-btn {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    padding: 0.4rem 1rem;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+  .knowledge-comment {
+    border-left: 3px solid #888;
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: #aaa;
+  }
+</style>
+
+<p class="back-link"><a href="{{ '/' | relative_url }}">&larr; ナレッジ一覧に戻る</a></p>
+
+<div class="knowledge-meta">
+  {% if page.date %}<span>📅 {{ page.date | date: "%Y-%m-%d" }}</span>{% endif %}
+  {% if page.discord_channel %}<span>💬 #{{ page.discord_channel }}</span>{% endif %}
+  {% if page.discord_user %}<span>👤 {{ page.discord_user }}</span>{% endif %}
+</div>
+
+{% if page.comment and page.comment != "" %}
+<div class="knowledge-comment">{{ page.comment }}</div>
+{% endif %}
+
+{% if page.source_url %}
+<a class="source-btn" href="{{ page.source_url }}" target="_blank" rel="noopener noreferrer">元のページを開く &rarr;</a>
+{% endif %}
+
+{{ content }}
