@@ -1,6 +1,6 @@
 ---
 title: "【構成解説】4コスト構成で間違いなくトップティアー、まろしゃんのLPを爆盛りした最強のヴァンガードルブラン構成を解説します。【チャレンジャー / TFT set17】 - YouTube"
-url: https://youtu.be/XmP-o_g7OnQ?si=4ou0HE8XgR3ggcZN
+source_url: https://youtu.be/XmP-o_g7OnQ?si=4ou0HE8XgR3ggcZN
 date: 2026-04-19T03:58:11.058439+09:00
 discord_channel: "tft"
 discord_user: "RomanticOrange"
