@@ -7,6 +7,9 @@ baseurl: /TFT-knowledge-base
 minima:
   skin: dark
 
+header_pages:
+  - index.md
+
 defaults:
   - scope:
       path: "knowledge"

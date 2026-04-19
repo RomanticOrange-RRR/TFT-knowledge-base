@@ -11,16 +11,17 @@ title: TFT ナレッジベース
     align-items: center;
   }
   .db-toolbar input {
-    padding: 0.4rem 0.7rem;
-    border: 1px solid #555;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #888;
     border-radius: 4px;
-    background: #1e1e1e;
-    color: inherit;
-    font-size: 0.9rem;
+    background: #2a2a2a;
+    color: #f0f0f0;
+    font-size: 0.95rem;
     flex: 1;
     min-width: 180px;
   }
-  .db-count { margin-left: auto; font-size: 0.85rem; color: #888; }
+  .db-toolbar input::placeholder { color: #aaa; }
+  .db-count { margin-left: auto; font-size: 0.9rem; color: #ccc; font-weight: 600; }
 
   .db-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed; }
   .db-table col.col-title   { width: 22%; }
@@ -29,27 +30,30 @@ title: TFT ナレッジベース
   .db-table col.col-url     { width: 18%; }
   .db-table th {
     text-align: left;
-    padding: 0.55rem 0.75rem;
-    background: #2a2a2a;
+    padding: 0.6rem 0.75rem;
+    background: #333;
+    color: #f0f0f0;
     border-bottom: 2px solid #e8a87c;
     cursor: pointer;
     user-select: none;
     white-space: nowrap;
+    font-size: 0.92rem;
+    font-weight: 700;
   }
-  .db-table th:hover { background: #333; }
-  .db-table th .sort-icon { margin-left: 4px; color: #888; font-size: 0.75rem; }
+  .db-table th:hover { background: #444; }
+  .db-table th .sort-icon { margin-left: 4px; color: #e8a87c; font-size: 0.8rem; }
   .db-table td {
     padding: 0.55rem 0.75rem;
-    border-bottom: 1px solid #2e2e2e;
+    border-bottom: 1px solid #3a3a3a;
     vertical-align: top;
     overflow: hidden;
     word-break: break-word;
   }
-  .db-table tr:hover td { background: rgba(255,255,255,0.03); }
-  .db-table td.title-cell a { font-weight: 600; text-decoration: none; }
+  .db-table tr:hover td { background: rgba(255,255,255,0.05); }
+  .db-table td.title-cell a { font-weight: 600; text-decoration: none; color: #7eb8f7; }
   .db-table td.title-cell a:hover { text-decoration: underline; }
-  .db-table td.summary-cell { color: #ccc; font-size: 0.85rem; }
-  .db-table td.comment-cell { color: #aaa; font-size: 0.85rem; }
+  .db-table td.summary-cell { color: #ddd; font-size: 0.85rem; }
+  .db-table td.comment-cell { color: #ccc; font-size: 0.85rem; }
   .db-table td.url-cell { font-size: 0.82rem; }
   .db-table td.url-cell a { color: #e8a87c; word-break: break-all; }
   .no-results { text-align: center; padding: 2rem; color: #888; }
