@@ -7,8 +7,7 @@ baseurl: /TFT-knowledge-base
 minima:
   skin: dark
 
-header_pages:
-  - index.md
+header_pages: []
 
 defaults:
   - scope:
