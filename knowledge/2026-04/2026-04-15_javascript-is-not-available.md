@@ -5,6 +5,7 @@ date: 2026-04-15T13:34:24.758492+09:00
 discord_channel: "tft"
 discord_user: "RomanticOrange"
 comment: ""
+summary: "このページはX.com(Twitter)にアクセスする際に表示される警告メッセージです。ブラウザでJavaScriptが無効になっているため、X.comの使用を続けるにはJavaScriptを有効にするか、対応ブラウザに切り替える必要があります。また、プライバシー関連の拡張機能がX.comの動作に支障をきたす可能性があるため、これらを無効にして再度アクセスすることが推奨されています。サポート情報はヘルプセンターから確認できます。"
 ---
 
 # JavaScript is not available.
