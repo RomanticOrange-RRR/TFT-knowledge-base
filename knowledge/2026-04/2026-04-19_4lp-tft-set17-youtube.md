@@ -6,6 +6,8 @@ discord_channel: "tft"
 discord_user: "RomanticOrange"
 comment: ""
 summary: "このページはYouTubeの動画で、TFT（Teamfight Tactics）のSet17におけるチャレンジャーレベルのゲームプレイ解説です。4コストのユニットを中心とした「ヴァンガードルブラン構成」という戦略がトップティアーの強力な構成として紹介されています。まろしゃんというプレイヤーが実際にこの構成を使用してLPを大幅に増やした実績に基づいた、最強の構成に関する詳細な解説動画となっています。"
+media_type: "youtube"
+thumbnail_url: "https://img.youtube.com/vi/XmP-o_g7OnQ/maxresdefault.jpg"
 ---
 
 # 【構成解説】4コスト構成で間違いなくトップティアー、まろしゃんのLPを爆盛りした最強のヴァンガードルブラン構成を解説します。【チャレンジャー / TFT set17】 - YouTube
