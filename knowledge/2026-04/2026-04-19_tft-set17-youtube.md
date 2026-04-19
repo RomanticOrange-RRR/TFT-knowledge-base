@@ -6,6 +6,8 @@ discord_channel: "tft"
 discord_user: "RomanticOrange"
 comment: ""
 summary: "このYouTubeの動画は、League of LegendsのTFT（Teamfight Tactics）set17におけるチャレンジャーランク帯での実況プレイ動画です。動画の主なテーマは、キャラクター「グレイブス」の最適なアップグレード方法を紹介し、このキャラクターがいかに強力で壊れた性能を持っているかを実際のプレイを通じて解説しています。グレイブスのアップグレードについて「これ一択」と称するほど、特定のアップグレード方法が圧倒的に有効であることが伝わります。"
+media_type: "youtube"
+thumbnail_url: "https://img.youtube.com/vi/5lkdnCEmAa8/maxresdefault.jpg"
 ---
 
 # 【フルプレイ】グレイブスのアップグレードはこれ一択！このキャラがいかに壊れてるか分かります【チャレンジャー / TFT set17】 - YouTube
