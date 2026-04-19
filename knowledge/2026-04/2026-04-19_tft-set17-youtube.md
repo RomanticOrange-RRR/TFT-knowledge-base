@@ -1,6 +1,6 @@
 ---
 title: "【フルプレイ】グレイブスのアップグレードはこれ一択！このキャラがいかに壊れてるか分かります【チャレンジャー / TFT set17】 - YouTube"
-url: https://youtu.be/5lkdnCEmAa8?si=h9UuHzbLDC6ponhG
+source_url: https://youtu.be/5lkdnCEmAa8?si=h9UuHzbLDC6ponhG
 date: 2026-04-19T03:58:12.795597+09:00
 discord_channel: "tft"
 discord_user: "RomanticOrange"
