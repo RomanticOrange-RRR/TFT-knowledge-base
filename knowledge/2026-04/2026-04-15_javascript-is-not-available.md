@@ -1,6 +1,6 @@
 ---
 title: "JavaScript is not available."
-url: https://x.com/i/status/2044020978078908813
+source_url: https://x.com/i/status/2044020978078908813
 date: 2026-04-15T13:34:24.758492+09:00
 discord_channel: "tft"
 discord_user: "RomanticOrange"
