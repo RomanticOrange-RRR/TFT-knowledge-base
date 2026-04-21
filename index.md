@@ -6,7 +6,7 @@ title: TFT ナレッジベース
   .db-toolbar {
     display: flex;
     gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
     flex-wrap: wrap;
     align-items: center;
   }
@@ -32,6 +32,26 @@ title: TFT ナレッジベース
     cursor: pointer;
   }
   .btn-token:hover { background: #3a3a3a; }
+
+  /* タグフィルター */
+  .tag-filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .tag-btn {
+    padding: 0.3rem 0.75rem;
+    border-radius: 20px;
+    border: 1px solid #555;
+    background: #2a2a2a;
+    color: #aaa;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tag-btn:hover { border-color: #e8a87c; color: #e8a87c; }
+  .tag-btn.active { background: #e8a87c; color: #111; border-color: #e8a87c; font-weight: 700; }
 
   /* カードグリッド */
   .card-grid {
@@ -119,8 +139,6 @@ title: TFT ナレッジベース
     font-size: 0.75rem;
     color: #888;
   }
-  .card-source a { color: #e8a87c; text-decoration: none; font-size: 0.75rem; }
-  .card-source a:hover { text-decoration: underline; }
   .media-badge {
     font-size: 0.7rem;
     padding: 0.1rem 0.4rem;
@@ -129,6 +147,7 @@ title: TFT ナレッジベース
   }
   .badge-youtube { background: #c0392b; color: #fff; }
   .badge-twitter { background: #1a8cd8; color: #fff; }
+  .badge-note    { background: #41c9b4; color: #111; }
   .badge-other   { background: #555; color: #ccc; }
 
   .btn-del {
@@ -187,12 +206,21 @@ title: TFT ナレッジベース
   <button class="btn-token" id="btn-token">🔑 削除モード</button>
 </div>
 
+<div class="tag-filters" id="tag-filters">
+  <button class="tag-btn active" data-type="all">すべて</button>
+  <button class="tag-btn" data-type="youtube">YouTube</button>
+  <button class="tag-btn" data-type="twitter">X / Twitter</button>
+  <button class="tag-btn" data-type="note">note</button>
+  <button class="tag-btn" data-type="other">Web</button>
+</div>
+
 <div class="card-grid" id="card-grid">
 {% for p in knowledge_pages %}
 <div class="card"
   data-title="{{ p.title | default: p.name | downcase }}"
   data-summary="{{ p.summary | downcase }}"
   data-comment="{{ p.comment | downcase }}"
+  data-media-type="{{ p.media_type | default: 'other' }}"
 >
   <button class="btn-del" data-path="{{ p.path }}" data-title="{{ p.title | default: p.name }}">🗑 削除</button>
 
@@ -205,17 +233,39 @@ title: TFT ナレッジベース
   {% elsif p.media_type == "youtube" %}
     <a href="{{ p.url | relative_url }}"><div class="card-thumb-placeholder">▶️</div></a>
   {% elsif p.media_type == "twitter" %}
-    <div class="tweet-preview">
-      {% assign parts = p.title | split: ": " %}
-      <div class="tweet-author">🐦 {{ parts[0] }}</div>
-      <div>{{ p.summary | truncate: 140 }}</div>
-    </div>
+    {% if p.thumbnail_url and p.thumbnail_url != "" %}
+      <a href="{{ p.source_url | default: p.url | relative_url }}" target="_blank" rel="noopener noreferrer">
+        <img class="card-thumb" src="{{ p.thumbnail_url }}" alt="{{ p.title }}" loading="lazy"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="card-thumb-placeholder" style="display:none">🐦</div>
+      </a>
+    {% else %}
+      <div class="tweet-preview">
+        {% assign parts = p.title | split: ": " %}
+        <div class="tweet-author">🐦 {{ parts[0] }}</div>
+        <div>{{ p.summary | truncate: 140 }}</div>
+      </div>
+    {% endif %}
+  {% elsif p.thumbnail_url and p.thumbnail_url != "" %}
+    <a href="{{ p.source_url }}" target="_blank" rel="noopener noreferrer">
+      <img class="card-thumb" src="{{ p.thumbnail_url }}" alt="{{ p.title }}" loading="lazy"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-thumb-placeholder" style="display:none">{% if p.media_type == "note" %}📝{% else %}📄{% endif %}</div>
+    </a>
   {% else %}
-    <a href="{{ p.url | relative_url }}"><div class="card-thumb-placeholder">📄</div></a>
+    <a href="{{ p.source_url | default: p.url | relative_url }}" {% if p.source_url %}target="_blank" rel="noopener noreferrer"{% endif %}>
+      <div class="card-thumb-placeholder">{% if p.media_type == "note" %}📝{% else %}📄{% endif %}</div>
+    </a>
   {% endif %}
 
   <div class="card-body">
-    <div class="card-title"><a href="{{ p.url | relative_url }}">{{ p.title | default: p.name }}</a></div>
+    <div class="card-title">
+      {% if p.source_url %}
+        <a href="{{ p.source_url }}" target="_blank" rel="noopener noreferrer">{{ p.title | default: p.name }}</a>
+      {% else %}
+        <a href="{{ p.url | relative_url }}">{{ p.title | default: p.name }}</a>
+      {% endif %}
+    </div>
     {% if p.media_type != "twitter" and p.summary and p.summary != "" %}
     <div class="card-summary">{{ p.summary }}</div>
     {% endif %}
@@ -226,10 +276,10 @@ title: TFT ナレッジベース
       <span class="media-badge badge-{{ p.media_type | default: 'other' }}">
         {% if p.media_type == "youtube" %}YouTube
         {% elsif p.media_type == "twitter" %}X / Twitter
+        {% elsif p.media_type == "note" %}note
         {% else %}Web{% endif %}
       </span>
       <span>{{ p.date | date: "%Y-%m-%d" }}</span>
-      {% if p.source_url %}<span class="card-source"><a href="{{ p.source_url }}" target="_blank" rel="noopener">元リンク →</a></span>{% endif %}
     </div>
   </div>
 </div>
@@ -264,6 +314,7 @@ title: TFT ナレッジベース
   const btnToken  = document.getElementById('btn-token');
 
   let cards = Array.from(grid.querySelectorAll('.card'));
+  let activeType = 'all';
 
   function getToken() { return localStorage.getItem(TOKEN_KEY); }
 
@@ -297,6 +348,16 @@ title: TFT ナレッジベース
     localStorage.setItem(TOKEN_KEY, t);
     modal.classList.remove('open');
     applyTokenMode();
+  });
+
+  // タグフィルター
+  document.getElementById('tag-filters').addEventListener('click', (e) => {
+    const btn = e.target.closest('.tag-btn');
+    if (!btn) return;
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeType = btn.dataset.type;
+    filter();
   });
 
   grid.addEventListener('click', async (e) => {
@@ -340,7 +401,9 @@ title: TFT ナレッジベース
     const q = search.value.toLowerCase();
     let visible = 0;
     cards.forEach(c => {
-      const match = !q || c.dataset.title.includes(q) || c.dataset.summary.includes(q) || c.dataset.comment.includes(q);
+      const typeMatch = activeType === 'all' || c.dataset.mediaType === activeType;
+      const textMatch = !q || c.dataset.title.includes(q) || c.dataset.summary.includes(q) || c.dataset.comment.includes(q);
+      const match = typeMatch && textMatch;
       c.style.display = match ? '' : 'none';
       if (match) visible++;
     });
