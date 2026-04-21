@@ -3,126 +3,207 @@ layout: default
 title: TFT ナレッジベース
 ---
 <style>
+  /* ── CSS変数 ── */
+  :root {
+    --bg:         #070b14;
+    --surface:    #0d1321;
+    --surface-2:  #111c2e;
+    --border:     #1c2d4a;
+    --gold:       #c89b3c;
+    --gold-light: #e8c97a;
+    --blue:       #4da8ff;
+    --red:        #e53935;
+    --text:       #cdd6f4;
+    --text-muted: #5a7099;
+    --glow-gold:  0 0 18px rgba(200,155,60,0.45);
+    --glow-blue:  0 0 18px rgba(77,168,255,0.4);
+    --glow-red:   0 0 12px rgba(229,57,53,0.5);
+  }
+
+  /* ── グローバル上書き ── */
+  body, .site-header, .site-footer, .page-content, .wrapper {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+  }
+  .site-header {
+    border-bottom: 1px solid var(--border) !important;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.7) !important;
+  }
+  .site-title, .site-title:visited {
+    color: var(--gold) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.06em !important;
+    text-shadow: var(--glow-gold) !important;
+  }
+  a { color: var(--blue); }
+
+  /* ── ツールバー ── */
   .db-toolbar {
     display: flex;
     gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
     flex-wrap: wrap;
     align-items: center;
   }
   .db-toolbar input {
-    padding: 0.5rem 0.8rem;
-    border: 1px solid #888;
-    border-radius: 4px;
-    background: #2a2a2a;
-    color: #f0f0f0;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
     font-size: 0.95rem;
     flex: 1;
     min-width: 180px;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
-  .db-toolbar input::placeholder { color: #aaa; }
-  .db-count { font-size: 0.9rem; color: #ccc; font-weight: 600; white-space: nowrap; }
+  .db-toolbar input::placeholder { color: var(--text-muted); }
+  .db-toolbar input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: var(--glow-gold);
+  }
+  .db-count {
+    font-size: 0.88rem;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
   .btn-token {
-    padding: 0.45rem 0.8rem;
-    border: 1px solid #888;
-    border-radius: 4px;
-    background: #2a2a2a;
-    color: #ccc;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text-muted);
     font-size: 0.85rem;
     cursor: pointer;
+    transition: all 0.2s;
   }
-  .btn-token:hover { background: #3a3a3a; }
+  .btn-token:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* タグフィルター */
-  .tag-filters {
+  /* ── タグ・月別フィルター ── */
+  .tag-filters, .month-filters {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.85rem;
     flex-wrap: wrap;
   }
-  .tag-btn {
-    padding: 0.3rem 0.75rem;
+  .tag-btn, .month-btn {
+    padding: 0.35rem 0.9rem;
     border-radius: 20px;
-    border: 1px solid #555;
-    background: #2a2a2a;
-    color: #aaa;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
     font-size: 0.8rem;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.18s;
+    font-weight: 500;
   }
-  .tag-btn:hover { border-color: #e8a87c; color: #e8a87c; }
-  .tag-btn.active { background: #e8a87c; color: #111; border-color: #e8a87c; font-weight: 700; }
+  .tag-btn:hover   { border-color: var(--gold); color: var(--gold); }
+  .month-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .tag-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #07090f;
+    border-color: transparent;
+    box-shadow: var(--glow-gold);
+    font-weight: 700;
+  }
+  .month-btn.active {
+    background: linear-gradient(135deg, #2979ff, var(--blue));
+    color: #07090f;
+    border-color: transparent;
+    box-shadow: var(--glow-blue);
+    font-weight: 700;
+  }
 
-  /* カードグリッド */
+  /* ── カードグリッド ── */
   .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
+    gap: 1.1rem;
   }
   .card {
-    background: #1e1e1e;
-    border: 1px solid #3a3a3a;
-    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: border-color 0.15s;
     position: relative;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
   }
-  .card:hover { border-color: #e8a87c; }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(200,155,60,0.05), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .card:hover {
+    border-color: var(--gold);
+    box-shadow: var(--glow-gold), 0 8px 32px rgba(0,0,0,0.5);
+    transform: translateY(-3px);
+  }
 
-  /* サムネイル */
+  /* ── サムネイル ── */
   .card-thumb {
     width: 100%;
     aspect-ratio: 16/9;
     object-fit: cover;
-    background: #2a2a2a;
+    background: var(--surface-2);
     display: block;
+    transition: opacity 0.2s;
   }
+  .card:hover .card-thumb { opacity: 0.9; }
   .card-thumb-placeholder {
     width: 100%;
     aspect-ratio: 16/9;
-    background: #2a2a2a;
+    background: var(--surface-2);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2.5rem;
   }
 
-  /* ツイートプレビュー */
+  /* ── ツイートプレビュー ── */
   .tweet-preview {
-    padding: 0.75rem;
-    background: #1a1a2e;
-    border-bottom: 1px solid #3a3a3a;
+    padding: 0.8rem;
+    background: #080d1a;
+    border-bottom: 1px solid var(--border);
     font-size: 0.85rem;
-    color: #ddd;
+    color: var(--text);
     line-height: 1.5;
     min-height: 80px;
   }
   .tweet-preview .tweet-author {
-    color: #7eb8f7;
+    color: var(--blue);
     font-weight: 700;
     margin-bottom: 0.3rem;
     font-size: 0.82rem;
   }
 
-  .card-body { padding: 0.75rem; flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+  /* ── カードボディ ── */
+  .card-body { padding: 0.8rem; flex: 1; display: flex; flex-direction: column; gap: 0.45rem; position: relative; z-index: 1; }
   .card-title a {
     font-weight: 700;
     font-size: 0.9rem;
-    color: #7eb8f7;
+    color: var(--blue);
     text-decoration: none;
-    line-height: 1.4;
+    line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    transition: color 0.15s;
   }
-  .card-title a:hover { text-decoration: underline; }
+  .card-title a:hover { color: var(--gold); text-decoration: none; }
   .card-summary {
     font-size: 0.8rem;
-    color: #bbb;
-    line-height: 1.5;
+    color: #7a8fb0;
+    line-height: 1.6;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -135,67 +216,84 @@ title: TFT ナレッジベース
     align-items: center;
     margin-top: 0.5rem;
     padding-top: 0.5rem;
-    border-top: 1px solid #2e2e2e;
-    font-size: 0.75rem;
-    color: #888;
+    border-top: 1px solid var(--border);
+    font-size: 0.73rem;
+    color: var(--text-muted);
   }
-  .media-badge {
-    font-size: 0.7rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 3px;
-    font-weight: 700;
-  }
-  .badge-youtube { background: #c0392b; color: #fff; }
-  .badge-twitter { background: #1a8cd8; color: #fff; }
-  .badge-note    { background: #41c9b4; color: #111; }
-  .badge-other   { background: #555; color: #ccc; }
 
+  /* ── バッジ ── */
+  .media-badge {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-youtube { background: #7f0000; color: #ef9a9a; box-shadow: 0 0 8px rgba(183,28,28,0.4); }
+  .badge-twitter { background: #0d2a5e; color: #90caf9; box-shadow: 0 0 8px rgba(13,71,161,0.4); }
+  .badge-note    { background: #004d40; color: #80cbc4; box-shadow: 0 0 8px rgba(0,105,92,0.4); }
+  .badge-other   { background: #1c2d4a; color: #6b8cbf; }
+  .badge-qa      { background: #3e0d5e; color: #ce93d8; box-shadow: 0 0 8px rgba(100,28,130,0.4); }
+
+  /* ── 削除ボタン ── */
   .btn-del {
     position: absolute;
-    top: 0.4rem;
-    right: 0.4rem;
-    background: rgba(192,57,43,0.85);
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(127,0,0,0.85);
     border: none;
     color: #fff;
-    border-radius: 4px;
-    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    padding: 0.2rem 0.55rem;
     font-size: 0.75rem;
     cursor: pointer;
     display: none;
+    backdrop-filter: blur(4px);
+    transition: background 0.15s, box-shadow 0.15s;
+    z-index: 10;
   }
-  .btn-del:hover { background: #c0392b; }
+  .btn-del:hover { background: var(--red); box-shadow: var(--glow-red); }
   .token-set .btn-del { display: block; }
 
-  .no-results { text-align: center; padding: 3rem; color: #888; }
+  /* ── その他 ── */
+  .no-results { text-align: center; padding: 3rem; color: var(--text-muted); }
 
+  /* ── モーダル ── */
   .modal-overlay {
     display: none;
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
     z-index: 1000;
     align-items: center;
     justify-content: center;
   }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: #2a2a2a;
-    border: 1px solid #555;
-    border-radius: 8px;
-    padding: 1.5rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
     width: 420px;
     max-width: 90vw;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.8), var(--glow-gold);
   }
-  .modal h3 { margin: 0 0 0.75rem; color: #f0f0f0; font-size: 1rem; }
-  .modal p  { font-size: 0.85rem; color: #aaa; margin: 0 0 1rem; }
+  .modal h3 { margin: 0 0 0.75rem; color: var(--gold); font-size: 1rem; letter-spacing: 0.04em; text-shadow: var(--glow-gold); }
+  .modal p  { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 1rem; }
   .modal input {
-    width: 100%; padding: 0.5rem; box-sizing: border-box;
-    background: #1e1e1e; border: 1px solid #666;
-    border-radius: 4px; color: #f0f0f0; font-size: 0.9rem; margin-bottom: 1rem;
+    width: 100%; padding: 0.6rem 0.8rem; box-sizing: border-box;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); font-size: 0.9rem; margin-bottom: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
+  .modal input:focus { outline: none; border-color: var(--gold); box-shadow: var(--glow-gold); }
   .modal-btns { display: flex; gap: 0.5rem; justify-content: flex-end; }
-  .modal-btns button { padding: 0.4rem 1rem; border-radius: 4px; border: none; font-size: 0.9rem; cursor: pointer; }
-  .btn-save-token { background: #e8a87c; color: #111; font-weight: 700; }
-  .btn-cancel { background: #444; color: #ccc; }
+  .modal-btns button { padding: 0.45rem 1.1rem; border-radius: 6px; border: none; font-size: 0.9rem; cursor: pointer; font-weight: 600; transition: all 0.15s; }
+  .btn-save-token { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: #07090f; }
+  .btn-save-token:hover { box-shadow: var(--glow-gold); }
+  .btn-cancel { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
 </style>
 
 {% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | sort: "date" | reverse %}
@@ -214,6 +312,8 @@ title: TFT ナレッジベース
   <button class="tag-btn" data-type="other">Web</button>
 </div>
 
+<div class="month-filters" id="month-filters"></div>
+
 <div class="card-grid" id="card-grid">
 {% for p in knowledge_pages %}
 <div class="card"
@@ -221,6 +321,7 @@ title: TFT ナレッジベース
   data-summary="{{ p.summary | downcase }}"
   data-comment="{{ p.comment | downcase }}"
   data-media-type="{{ p.media_type | default: 'other' }}"
+  data-date="{{ p.date | date: "%Y-%m" }}"
 >
   <button class="btn-del" data-path="{{ p.path }}" data-title="{{ p.title | default: p.name }}">🗑 削除</button>
 
@@ -270,13 +371,14 @@ title: TFT ナレッジベース
     <div class="card-summary">{{ p.summary }}</div>
     {% endif %}
     {% if p.comment and p.comment != "" %}
-    <div style="font-size:0.78rem;color:#aaa;font-style:italic">💬 {{ p.comment | truncate: 60 }}</div>
+    <div style="font-size:0.78rem;color:var(--text-muted);font-style:italic">💬 {{ p.comment | truncate: 60 }}</div>
     {% endif %}
     <div class="card-footer">
       <span class="media-badge badge-{{ p.media_type | default: 'other' }}">
         {% if p.media_type == "youtube" %}YouTube
         {% elsif p.media_type == "twitter" %}X / Twitter
         {% elsif p.media_type == "note" %}note
+        {% elsif p.media_type == "qa" %}Q&A
         {% else %}Web{% endif %}
       </span>
       <span>{{ p.date | date: "%Y-%m-%d" }}</span>
@@ -315,15 +417,61 @@ title: TFT ナレッジベース
 
   let cards = Array.from(grid.querySelectorAll('.card'));
   let activeType = 'all';
+  let activeMonth = 'all';
 
   function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+  function updateBadges() {
+    const counts = { all: 0, youtube: 0, twitter: 0, note: 0, other: 0 };
+    cards.forEach(c => {
+      const t = c.dataset.mediaType || 'other';
+      counts.all++;
+      if (t in counts) counts[t]++;
+      else counts.other++;
+    });
+    document.querySelector('[data-type="all"]').textContent     = `すべて (${counts.all})`;
+    document.querySelector('[data-type="youtube"]').textContent = `YouTube (${counts.youtube})`;
+    document.querySelector('[data-type="twitter"]').textContent = `X / Twitter (${counts.twitter})`;
+    document.querySelector('[data-type="note"]').textContent    = `note (${counts.note})`;
+    document.querySelector('[data-type="other"]').textContent   = `Web (${counts.other})`;
+  }
+
+  function buildMonthFilter() {
+    const months = [...new Set(cards.map(c => c.dataset.date).filter(Boolean))].sort().reverse();
+    const container = document.getElementById('month-filters');
+    if (months.length === 0) return;
+
+    const allBtn = document.createElement('button');
+    allBtn.className = 'month-btn active';
+    allBtn.dataset.month = 'all';
+    allBtn.textContent = 'すべての月';
+    container.appendChild(allBtn);
+
+    months.forEach(m => {
+      const btn = document.createElement('button');
+      btn.className = 'month-btn';
+      btn.dataset.month = m;
+      const [y, mo] = m.split('-');
+      btn.textContent = `${y}年${parseInt(mo)}月`;
+      container.appendChild(btn);
+    });
+
+    container.addEventListener('click', e => {
+      const btn = e.target.closest('.month-btn');
+      if (!btn) return;
+      document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeMonth = btn.dataset.month;
+      filter();
+    });
+  }
 
   function applyTokenMode() {
     if (getToken()) {
       grid.classList.add('token-set');
       btnToken.textContent = '🔑 削除モード ON';
-      btnToken.style.borderColor = '#e8a87c';
-      btnToken.style.color = '#e8a87c';
+      btnToken.style.borderColor = 'var(--gold)';
+      btnToken.style.color = 'var(--gold)';
     } else {
       grid.classList.remove('token-set');
       btnToken.textContent = '🔑 削除モード';
@@ -350,7 +498,6 @@ title: TFT ナレッジベース
     applyTokenMode();
   });
 
-  // タグフィルター
   document.getElementById('tag-filters').addEventListener('click', (e) => {
     const btn = e.target.closest('.tag-btn');
     if (!btn) return;
@@ -401,9 +548,10 @@ title: TFT ナレッジベース
     const q = search.value.toLowerCase();
     let visible = 0;
     cards.forEach(c => {
-      const typeMatch = activeType === 'all' || c.dataset.mediaType === activeType;
-      const textMatch = !q || c.dataset.title.includes(q) || c.dataset.summary.includes(q) || c.dataset.comment.includes(q);
-      const match = typeMatch && textMatch;
+      const typeMatch  = activeType  === 'all' || c.dataset.mediaType === activeType;
+      const monthMatch = activeMonth === 'all' || c.dataset.date === activeMonth;
+      const textMatch  = !q || c.dataset.title.includes(q) || c.dataset.summary.includes(q) || c.dataset.comment.includes(q);
+      const match = typeMatch && monthMatch && textMatch;
       c.style.display = match ? '' : 'none';
       if (match) visible++;
     });
@@ -413,6 +561,8 @@ title: TFT ナレッジベース
 
   search.addEventListener('input', filter);
   applyTokenMode();
+  updateBadges();
+  buildMonthFilter();
   filter();
 })();
 </script>
