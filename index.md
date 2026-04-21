@@ -82,14 +82,23 @@ title: TFT ナレッジベース
   }
   .btn-token:hover { border-color: var(--gold); color: var(--gold); }
 
-  /* ── タグ・月別フィルター ── */
-  .tag-filters, .month-filters {
+  /* ── タグ・年・月フィルター ── */
+  .tag-filters, .year-filters, .month-filters {
     display: flex;
     gap: 0.5rem;
     margin-bottom: 0.85rem;
     flex-wrap: wrap;
+    align-items: center;
   }
-  .tag-btn, .month-btn {
+  .filter-label {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin-right: 0.15rem;
+  }
+  .tag-btn, .year-btn, .month-btn {
     padding: 0.35rem 0.9rem;
     border-radius: 20px;
     border: 1px solid var(--border);
@@ -100,13 +109,21 @@ title: TFT ナレッジベース
     transition: all 0.18s;
     font-weight: 500;
   }
-  .tag-btn:hover   { border-color: var(--gold); color: var(--gold); }
+  .tag-btn:hover  { border-color: var(--gold); color: var(--gold); }
+  .year-btn:hover { border-color: #a78bfa; color: #a78bfa; }
   .month-btn:hover { border-color: var(--blue); color: var(--blue); }
   .tag-btn.active {
     background: linear-gradient(135deg, var(--gold), var(--gold-light));
     color: #07090f;
     border-color: transparent;
     box-shadow: var(--glow-gold);
+    font-weight: 700;
+  }
+  .year-btn.active {
+    background: linear-gradient(135deg, #7c3aed, #a78bfa);
+    color: #07090f;
+    border-color: transparent;
+    box-shadow: 0 0 16px rgba(167,139,250,0.45);
     font-weight: 700;
   }
   .month-btn.active {
@@ -116,6 +133,7 @@ title: TFT ナレッジベース
     box-shadow: var(--glow-blue);
     font-weight: 700;
   }
+  .month-filters:empty { display: none; }
 
   /* ── カードグリッド ── */
   .card-grid {
@@ -312,6 +330,7 @@ title: TFT ナレッジベース
   <button class="tag-btn" data-type="other">Web</button>
 </div>
 
+<div class="year-filters" id="year-filters"></div>
 <div class="month-filters" id="month-filters"></div>
 
 <div class="card-grid" id="card-grid">
@@ -416,7 +435,8 @@ title: TFT ナレッジベース
   const btnToken  = document.getElementById('btn-token');
 
   let cards = Array.from(grid.querySelectorAll('.card'));
-  let activeType = 'all';
+  let activeType  = 'all';
+  let activeYear  = 'all';
   let activeMonth = 'all';
 
   function getToken() { return localStorage.getItem(TOKEN_KEY); }
@@ -436,23 +456,73 @@ title: TFT ナレッジベース
     document.querySelector('[data-type="other"]').textContent   = `Web (${counts.other})`;
   }
 
-  function buildMonthFilter() {
-    const months = [...new Set(cards.map(c => c.dataset.date).filter(Boolean))].sort().reverse();
+  function buildYearFilter() {
+    const years = [...new Set(
+      cards.map(c => (c.dataset.date || '').split('-')[0]).filter(Boolean)
+    )].sort().reverse();
+    const container = document.getElementById('year-filters');
+    if (years.length === 0) return;
+
+    const label = document.createElement('span');
+    label.className = 'filter-label';
+    label.textContent = '年';
+    container.appendChild(label);
+
+    const allBtn = document.createElement('button');
+    allBtn.className = 'year-btn active';
+    allBtn.dataset.year = 'all';
+    allBtn.textContent = 'すべて';
+    container.appendChild(allBtn);
+
+    years.forEach(y => {
+      const btn = document.createElement('button');
+      btn.className = 'year-btn';
+      btn.dataset.year = y;
+      btn.textContent = `${y}年`;
+      container.appendChild(btn);
+    });
+
+    container.addEventListener('click', e => {
+      const btn = e.target.closest('.year-btn');
+      if (!btn) return;
+      document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeYear  = btn.dataset.year;
+      activeMonth = 'all';
+      rebuildMonthFilter();
+      filter();
+    });
+  }
+
+  function rebuildMonthFilter() {
     const container = document.getElementById('month-filters');
+    container.innerHTML = '';
+
+    const months = [...new Set(
+      cards
+        .map(c => c.dataset.date)
+        .filter(d => d && (activeYear === 'all' || d.startsWith(activeYear)))
+    )].sort().reverse();
+
     if (months.length === 0) return;
+
+    const label = document.createElement('span');
+    label.className = 'filter-label';
+    label.textContent = '月';
+    container.appendChild(label);
 
     const allBtn = document.createElement('button');
     allBtn.className = 'month-btn active';
     allBtn.dataset.month = 'all';
-    allBtn.textContent = 'すべての月';
+    allBtn.textContent = 'すべて';
     container.appendChild(allBtn);
 
     months.forEach(m => {
       const btn = document.createElement('button');
       btn.className = 'month-btn';
       btn.dataset.month = m;
-      const [y, mo] = m.split('-');
-      btn.textContent = `${y}年${parseInt(mo)}月`;
+      const [, mo] = m.split('-');
+      btn.textContent = `${parseInt(mo)}月`;
       container.appendChild(btn);
     });
 
@@ -549,9 +619,10 @@ title: TFT ナレッジベース
     let visible = 0;
     cards.forEach(c => {
       const typeMatch  = activeType  === 'all' || c.dataset.mediaType === activeType;
+      const yearMatch  = activeYear  === 'all' || (c.dataset.date || '').startsWith(activeYear);
       const monthMatch = activeMonth === 'all' || c.dataset.date === activeMonth;
       const textMatch  = !q || c.dataset.title.includes(q) || c.dataset.summary.includes(q) || c.dataset.comment.includes(q);
-      const match = typeMatch && monthMatch && textMatch;
+      const match = typeMatch && yearMatch && monthMatch && textMatch;
       c.style.display = match ? '' : 'none';
       if (match) visible++;
     });
@@ -562,7 +633,8 @@ title: TFT ナレッジベース
   search.addEventListener('input', filter);
   applyTokenMode();
   updateBadges();
-  buildMonthFilter();
+  buildYearFilter();
+  rebuildMonthFilter();
   filter();
 })();
 </script>
