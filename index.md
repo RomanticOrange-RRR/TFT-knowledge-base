@@ -1,6 +1,6 @@
 ---
 layout: default
-title: TFT ナレッジベース
+title: TFT My Portal
 ---
 <style>
   /* ── CSS変数 ── */
@@ -312,10 +312,137 @@ title: TFT ナレッジベース
   .btn-save-token:hover { box-shadow: var(--glow-gold); }
   .btn-cancel { background: var(--surface); color: var(--text-muted); border: 1px solid var(--border); }
   .btn-cancel:hover { border-color: var(--text-muted); color: var(--text); }
+
+  /* ── タブバー ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    padding: 0.65rem 1.4rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    margin-bottom: -1px;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    text-shadow: var(--glow-gold);
+  }
+
+  /* ── 攻略サイトグリッド ── */
+  .sites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.1rem;
+    margin-top: 0.5rem;
+  }
+  .site-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(200,155,60,0.05), transparent 60%);
+    pointer-events: none;
+  }
+  .site-card:hover {
+    border-color: var(--gold);
+    box-shadow: var(--glow-gold), 0 8px 32px rgba(0,0,0,0.5);
+    transform: translateY(-3px);
+    text-decoration: none;
+  }
+  .site-favicon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--surface-2);
+    flex-shrink: 0;
+  }
+  .site-info { flex: 1; min-width: 0; }
+  .site-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+  .site-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+  .site-url {
+    font-size: 0.72rem;
+    color: var(--blue);
+    margin-top: 0.3rem;
+    opacity: 0.8;
+  }
+  .site-arrow {
+    font-size: 1.1rem;
+    color: var(--gold);
+    opacity: 0.6;
+    flex-shrink: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .site-card:hover .site-arrow { opacity: 1; transform: translateX(3px); }
+  .site-tags {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    margin-top: 0.45rem;
+  }
+  .site-tag {
+    font-size: 0.65rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .sites-section-title {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sites-section-title:first-child { margin-top: 0; }
 </style>
 
 {% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | sort: "date" | reverse %}
 
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="knowledge">📚 ナレッジ</button>
+  <button class="tab-btn" data-tab="sites">🌐 攻略サイト</button>
+</div>
+
+<div id="tab-knowledge">
 <div class="db-toolbar">
   <input type="text" id="search" placeholder="タイトル・要約・コメントを検索...">
   <span class="db-count" id="count"></span>
@@ -407,6 +534,73 @@ title: TFT ナレッジベース
 {% endfor %}
 </div>
 <p class="no-results" id="no-results" style="display:none">該当するナレッジが見つかりません。</p>
+</div><!-- /tab-knowledge -->
+
+<div id="tab-sites" style="display:none">
+  <p class="sites-section-title">📊 メタ・統計サイト</p>
+  <div class="sites-grid">
+    <a class="site-card" href="https://www.metatft.com/" target="_blank" rel="noopener noreferrer">
+      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=metatft.com&sz=64" alt="MetaTFT">
+      <div class="site-info">
+        <div class="site-name">MetaTFT</div>
+        <div class="site-desc">メタコンプ・アイテム統計・ランキング。現パッチで最も強い構成を数値で確認できる</div>
+        <div class="site-tags">
+          <span class="site-tag">メタ統計</span>
+          <span class="site-tag">ランキング</span>
+          <span class="site-tag">アイテム</span>
+        </div>
+        <div class="site-url">metatft.com</div>
+      </div>
+      <span class="site-arrow">→</span>
+    </a>
+    <a class="site-card" href="https://tactics.tools/ja" target="_blank" rel="noopener noreferrer">
+      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tactics.tools&sz=64" alt="Tactics.tools">
+      <div class="site-info">
+        <div class="site-name">Tactics.tools</div>
+        <div class="site-desc">コンプビルダー・勝率統計・プレイヤー検索。日本語完全対応</div>
+        <div class="site-tags">
+          <span class="site-tag">ビルダー</span>
+          <span class="site-tag">勝率統計</span>
+          <span class="site-tag">日本語</span>
+        </div>
+        <div class="site-url">tactics.tools/ja</div>
+      </div>
+      <span class="site-arrow">→</span>
+    </a>
+    <a class="site-card" href="https://op.gg/ja/tft" target="_blank" rel="noopener noreferrer">
+      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=op.gg&sz=64" alt="OP.GG TFT">
+      <div class="site-info">
+        <div class="site-name">OP.GG TFT</div>
+        <div class="site-desc">プレイヤー統計・ランキング・チャンピオン別情報。日本語対応</div>
+        <div class="site-tags">
+          <span class="site-tag">プレイヤー検索</span>
+          <span class="site-tag">ランキング</span>
+          <span class="site-tag">日本語</span>
+        </div>
+        <div class="site-url">op.gg/ja/tft</div>
+      </div>
+      <span class="site-arrow">→</span>
+    </a>
+  </div>
+
+  <p class="sites-section-title">📖 攻略・ガイドサイト</p>
+  <div class="sites-grid">
+    <a class="site-card" href="https://tftips.app/" target="_blank" rel="noopener noreferrer">
+      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tftips.app&sz=64" alt="TFTips">
+      <div class="site-info">
+        <div class="site-name">TFTips</div>
+        <div class="site-desc">構成ガイド・アイテムチートシート・パッチ別攻略情報。初心者にも見やすい</div>
+        <div class="site-tags">
+          <span class="site-tag">ガイド</span>
+          <span class="site-tag">チートシート</span>
+          <span class="site-tag">構成</span>
+        </div>
+        <div class="site-url">tftips.app</div>
+      </div>
+      <span class="site-arrow">→</span>
+    </a>
+  </div>
+</div><!-- /tab-sites -->
 
 <div class="modal-overlay" id="modal">
   <div class="modal">
@@ -636,5 +830,16 @@ title: TFT ナレッジベース
   buildYearFilter();
   rebuildMonthFilter();
   filter();
+
+  // タブ切り替え
+  document.querySelector('.tab-bar').addEventListener('click', e => {
+    const btn = e.target.closest('.tab-btn');
+    if (!btn) return;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('tab-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
+    document.getElementById('tab-sites').style.display     = tab === 'sites'     ? '' : 'none';
+  });
 })();
 </script>
