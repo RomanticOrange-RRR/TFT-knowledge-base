@@ -349,16 +349,14 @@ title: TFT My Portal
   }
   .site-card {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.1rem 1.2rem;
+    flex-direction: column;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 10px;
     text-decoration: none;
+    overflow: hidden;
     transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
     position: relative;
-    overflow: hidden;
   }
   .site-card::before {
     content: '';
@@ -366,6 +364,7 @@ title: TFT My Portal
     inset: 0;
     background: linear-gradient(135deg, rgba(200,155,60,0.05), transparent 60%);
     pointer-events: none;
+    z-index: 0;
   }
   .site-card:hover {
     border-color: var(--gold);
@@ -373,45 +372,79 @@ title: TFT My Portal
     transform: translateY(-3px);
     text-decoration: none;
   }
-  .site-favicon {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+  .site-banner {
+    width: 100%;
+    aspect-ratio: 16/7;
     object-fit: cover;
     background: var(--surface-2);
+    display: block;
+    transition: opacity 0.2s;
+  }
+  .site-card:hover .site-banner { opacity: 0.9; }
+  .site-banner-placeholder {
+    width: 100%;
+    aspect-ratio: 16/7;
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .site-banner-placeholder img {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+  }
+  .site-banner-placeholder span {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: 0.04em;
+  }
+  .site-body {
+    padding: 0.8rem 0.9rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    position: relative;
+    z-index: 1;
+  }
+  .site-header-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .site-favicon {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    object-fit: cover;
     flex-shrink: 0;
   }
-  .site-info { flex: 1; min-width: 0; }
   .site-name {
     font-weight: 700;
     font-size: 0.95rem;
     color: var(--text);
-    margin-bottom: 0.2rem;
-  }
-  .site-desc {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    line-height: 1.4;
-  }
-  .site-url {
-    font-size: 0.72rem;
-    color: var(--blue);
-    margin-top: 0.3rem;
-    opacity: 0.8;
   }
   .site-arrow {
-    font-size: 1.1rem;
+    margin-left: auto;
+    font-size: 1rem;
     color: var(--gold);
-    opacity: 0.6;
-    flex-shrink: 0;
+    opacity: 0.5;
     transition: opacity 0.2s, transform 0.2s;
   }
   .site-card:hover .site-arrow { opacity: 1; transform: translateX(3px); }
+  .site-desc {
+    font-size: 0.79rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
   .site-tags {
     display: flex;
     gap: 0.35rem;
     flex-wrap: wrap;
-    margin-top: 0.45rem;
+    margin-top: 0.1rem;
   }
   .site-tag {
     font-size: 0.65rem;
@@ -422,6 +455,12 @@ title: TFT My Portal
     background: var(--surface-2);
     border: 1px solid var(--border);
     color: var(--text-muted);
+  }
+  .site-url {
+    font-size: 0.71rem;
+    color: var(--blue);
+    opacity: 0.75;
+    margin-top: 0.15rem;
   }
   .sites-section-title {
     font-size: 0.75rem;
@@ -539,10 +578,22 @@ title: TFT My Portal
 <div id="tab-sites" style="display:none">
   <p class="sites-section-title">📊 メタ・統計サイト</p>
   <div class="sites-grid">
+
     <a class="site-card" href="https://www.metatft.com/" target="_blank" rel="noopener noreferrer">
-      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=metatft.com&sz=64" alt="MetaTFT">
-      <div class="site-info">
-        <div class="site-name">MetaTFT</div>
+      <img class="site-banner"
+           src="https://www.metatft.com/MetaTFTLogo.png"
+           alt="MetaTFT"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="site-banner-placeholder" style="display:none">
+        <img src="https://www.google.com/s2/favicons?domain=metatft.com&sz=64" alt="">
+        <span>MetaTFT</span>
+      </div>
+      <div class="site-body">
+        <div class="site-header-row">
+          <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=metatft.com&sz=32" alt="">
+          <span class="site-name">MetaTFT</span>
+          <span class="site-arrow">→</span>
+        </div>
         <div class="site-desc">メタコンプ・アイテム統計・ランキング。現パッチで最も強い構成を数値で確認できる</div>
         <div class="site-tags">
           <span class="site-tag">メタ統計</span>
@@ -551,12 +602,19 @@ title: TFT My Portal
         </div>
         <div class="site-url">metatft.com</div>
       </div>
-      <span class="site-arrow">→</span>
     </a>
+
     <a class="site-card" href="https://tactics.tools/ja" target="_blank" rel="noopener noreferrer">
-      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tactics.tools&sz=64" alt="Tactics.tools">
-      <div class="site-info">
-        <div class="site-name">Tactics.tools</div>
+      <div class="site-banner-placeholder">
+        <img src="https://www.google.com/s2/favicons?domain=tactics.tools&sz=64" alt="">
+        <span>Tactics.tools</span>
+      </div>
+      <div class="site-body">
+        <div class="site-header-row">
+          <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tactics.tools&sz=32" alt="">
+          <span class="site-name">Tactics.tools</span>
+          <span class="site-arrow">→</span>
+        </div>
         <div class="site-desc">コンプビルダー・勝率統計・プレイヤー検索。日本語完全対応</div>
         <div class="site-tags">
           <span class="site-tag">ビルダー</span>
@@ -565,12 +623,23 @@ title: TFT My Portal
         </div>
         <div class="site-url">tactics.tools/ja</div>
       </div>
-      <span class="site-arrow">→</span>
     </a>
+
     <a class="site-card" href="https://op.gg/ja/tft" target="_blank" rel="noopener noreferrer">
-      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=op.gg&sz=64" alt="OP.GG TFT">
-      <div class="site-info">
-        <div class="site-name">OP.GG TFT</div>
+      <img class="site-banner"
+           src="https://c-tft-web.op.gg/images/Opengraph.png"
+           alt="OP.GG TFT"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="site-banner-placeholder" style="display:none">
+        <img src="https://www.google.com/s2/favicons?domain=op.gg&sz=64" alt="">
+        <span>OP.GG TFT</span>
+      </div>
+      <div class="site-body">
+        <div class="site-header-row">
+          <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=op.gg&sz=32" alt="">
+          <span class="site-name">OP.GG TFT</span>
+          <span class="site-arrow">→</span>
+        </div>
         <div class="site-desc">プレイヤー統計・ランキング・チャンピオン別情報。日本語対応</div>
         <div class="site-tags">
           <span class="site-tag">プレイヤー検索</span>
@@ -579,16 +648,28 @@ title: TFT My Portal
         </div>
         <div class="site-url">op.gg/ja/tft</div>
       </div>
-      <span class="site-arrow">→</span>
     </a>
+
   </div>
 
   <p class="sites-section-title">📖 攻略・ガイドサイト</p>
   <div class="sites-grid">
+
     <a class="site-card" href="https://tftips.app/" target="_blank" rel="noopener noreferrer">
-      <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tftips.app&sz=64" alt="TFTips">
-      <div class="site-info">
-        <div class="site-name">TFTips</div>
+      <img class="site-banner"
+           src="https://tftips.b-cdn.net/site/logo.webp"
+           alt="TFTips"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="site-banner-placeholder" style="display:none">
+        <img src="https://www.google.com/s2/favicons?domain=tftips.app&sz=64" alt="">
+        <span>TFTips</span>
+      </div>
+      <div class="site-body">
+        <div class="site-header-row">
+          <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tftips.app&sz=32" alt="">
+          <span class="site-name">TFTips</span>
+          <span class="site-arrow">→</span>
+        </div>
         <div class="site-desc">構成ガイド・アイテムチートシート・パッチ別攻略情報。初心者にも見やすい</div>
         <div class="site-tags">
           <span class="site-tag">ガイド</span>
@@ -597,8 +678,8 @@ title: TFT My Portal
         </div>
         <div class="site-url">tftips.app</div>
       </div>
-      <span class="site-arrow">→</span>
     </a>
+
   </div>
 </div><!-- /tab-sites -->
 
