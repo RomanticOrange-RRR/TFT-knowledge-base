@@ -680,6 +680,32 @@ title: TFT My Portal
       </div>
     </a>
 
+
+    <a class="site-card" href="https://tftacademy.com/" target="_blank" rel="noopener noreferrer">
+      <img class="site-banner"
+           src="https://tftacademy.com/og-image.png"
+           alt="TFT Academy"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="site-banner-placeholder" style="display:none">
+        <img src="https://www.google.com/s2/favicons?domain=tftacademy.com&sz=64" alt="">
+        <span>TFT Academy</span>
+      </div>
+      <div class="site-body">
+        <div class="site-header-row">
+          <img class="site-favicon" src="https://www.google.com/s2/favicons?domain=tftacademy.com&sz=32" alt="">
+          <span class="site-name">TFT Academy</span>
+          <span class="site-arrow">→</span>
+        </div>
+        <div class="site-desc">構成ティアリスト・リロール構成ガイドを詳しく解説。Set17対応</div>
+        <div class="site-tags">
+          <span class="site-tag">ティアリスト</span>
+          <span class="site-tag">構成</span>
+          <span class="site-tag">ガイド</span>
+        </div>
+        <div class="site-url">tftacademy.com</div>
+      </div>
+    </a>
+
   </div>
 </div><!-- /tab-sites -->
 
