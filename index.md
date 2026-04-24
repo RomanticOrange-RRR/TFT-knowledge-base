@@ -474,7 +474,7 @@ title: TFT My Portal
   .sites-section-title:first-child { margin-top: 0; }
 </style>
 
-{% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | sort: "date" | reverse %}
+{% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | where_exp: "p", "p.media_type != 'qa'" | sort: "date" | reverse %}
 
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="knowledge">📚 ナレッジ</button>
