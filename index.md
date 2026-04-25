@@ -759,9 +759,6 @@ title: TFT My Portal
         {% if p.source and p.source != "" %}
         <span class="tip-tag tip-tag-source">📡 {{ p.source }}</span>
         {% endif %}
-        {% if p.discord_user and p.discord_user != "" %}
-        <span class="tip-tag" style="background:rgba(77,168,255,0.1);color:#4da8ff">🎮 {{ p.discord_user }}</span>
-        {% endif %}
       </div>
       <div class="tip-title">{{ p.title }}</div>
       <div class="tip-body">{{ p.body | newline_to_br }}</div>
