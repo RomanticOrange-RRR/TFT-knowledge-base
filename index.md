@@ -621,7 +621,8 @@ title: TFT My Portal
   }
 </style>
 
-{% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | where_exp: "p", "p.media_type != 'qa'" | sort: "date" | reverse %}
+{% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | where_exp: "p", "p.media_type != 'qa'" | where_exp: "p", "p.media_type != 'tips'" | sort: "date" | reverse %}
+{% assign tips_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/tips/'" | sort: "date" | reverse %}
 
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="knowledge">📚 ナレッジ</button>
@@ -725,30 +726,66 @@ title: TFT My Portal
 
 <div id="tab-tips" style="display:none">
   <div class="tips-subtab-bar" id="tips-subtabs">
-    <button class="tips-subtab-btn active" data-cat="chara">⚔️ 強いキャラ <span class="tips-cnt" id="cnt-chara"></span></button>
-    <button class="tips-subtab-btn" data-cat="augment">💎 オーグメント <span class="tips-cnt" id="cnt-augment"></span></button>
-    <button class="tips-subtab-btn" data-cat="strategy">🧠 立ち回り <span class="tips-cnt" id="cnt-strategy"></span></button>
-    <button class="tips-subtab-btn" data-cat="comp">🏆 コンプ <span class="tips-cnt" id="cnt-comp"></span></button>
+    <button class="tips-subtab-btn active" data-cat="all">すべて <span id="cnt-all"></span></button>
+    <button class="tips-subtab-btn" data-cat="chara">⚔️ 強いキャラ <span id="cnt-chara"></span></button>
+    <button class="tips-subtab-btn" data-cat="augment">💎 オーグメント <span id="cnt-augment"></span></button>
+    <button class="tips-subtab-btn" data-cat="strategy">🧠 立ち回り <span id="cnt-strategy"></span></button>
+    <button class="tips-subtab-btn" data-cat="comp">🏆 コンプ <span id="cnt-comp"></span></button>
   </div>
 
-  <div class="tips-grid" id="tips-grid"></div>
+  <div class="tips-grid" id="tips-grid">
+  {% if tips_pages.size == 0 %}
+    <div class="tips-empty" style="grid-column:1/-1">
+      まだTipsがありません。DiscordでBotに <code>@bot tip [内容]</code> と送ると自動で追加されます。
+    </div>
+  {% else %}
+    {% for p in tips_pages %}
+    <div class="tip-card"
+      data-cat="{{ p.tips_category | default: 'strategy' }}"
+      data-rank="{{ p.rank | default: 'A' }}"
+    >
+      <div class="tip-tags">
+        {% assign rank = p.rank | default: 'A' %}
+        {% assign cat  = p.tips_category | default: 'strategy' %}
+        {% if rank == 'S' %}<span class="tip-tag tip-tag-s">
+          {% if cat == 'chara' or cat == 'comp' %}S ランク{% elsif cat == 'augment' %}強い{% else %}重要{% endif %}
+        </span>
+        {% elsif rank == 'A' %}<span class="tip-tag tip-tag-a">
+          {% if cat == 'chara' or cat == 'comp' %}A ランク{% elsif cat == 'augment' %}普通{% else %}参考{% endif %}
+        </span>
+        {% else %}<span class="tip-tag tip-tag-b">
+          {% if cat == 'chara' or cat == 'comp' %}B ランク{% elsif cat == 'augment' %}弱い{% else %}メモ{% endif %}
+        </span>{% endif %}
+        {% if p.source and p.source != "" %}
+        <span class="tip-tag tip-tag-source">📡 {{ p.source }}</span>
+        {% endif %}
+        {% if p.discord_user and p.discord_user != "" %}
+        <span class="tip-tag" style="background:rgba(77,168,255,0.1);color:#4da8ff">🎮 {{ p.discord_user }}</span>
+        {% endif %}
+      </div>
+      <div class="tip-title">{{ p.title }}</div>
+      <div class="tip-body">{{ p.body | newline_to_br }}</div>
+      <div class="tip-footer">
+        <span>{{ p.date | date: "%Y-%m-%d" }}</span>
+        <span style="font-size:0.7rem;color:var(--text-muted)">
+          {% if cat == 'chara' %}⚔️ 強いキャラ
+          {% elsif cat == 'augment' %}💎 オーグメント
+          {% elsif cat == 'strategy' %}🧠 立ち回り
+          {% elsif cat == 'comp' %}🏆 コンプ
+          {% endif %}
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+  {% endif %}
+  </div>
 
-  <div class="tips-add-form">
-    <h4>+ Tips を追加</h4>
-    <div class="tips-form-row">
-      <input class="f-title" id="tip-title" type="text" placeholder="タイトル（例: ジン、ジュジュツカイセン、慎重ロールダウン）">
-      <select id="tip-rank">
-        <option value="S">S（超強い）</option>
-        <option value="A" selected>A（強い）</option>
-        <option value="B">B（参考）</option>
-      </select>
-    </div>
-    <div class="tips-form-row">
-      <textarea id="tip-body" placeholder="内容を入力（改行OK）"></textarea>
-    </div>
-    <div class="tips-form-row">
-      <input id="tip-source" type="text" placeholder="出典（例: EWC大会 2025/04）" style="flex:1">
-      <button class="btn-tips-add" id="btn-tip-add">追加</button>
+  <div class="tips-add-form" style="margin-top:1.5rem">
+    <h4>💬 Discord から追加する方法</h4>
+    <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.8;padding:0.5rem 0">
+      TFT Bot に <strong style="color:var(--text)">@bot tip [内容]</strong> と送るだけで自動で保存されます。<br>
+      <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip ジンはSランク。スペルシェイパー2との相性が抜群</code><br>
+      <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip 8-1ロールダウンはHP80以上の時だけ行う</code>
     </div>
   </div>
 </div><!-- /tab-tips -->
@@ -1129,70 +1166,25 @@ title: TFT My Portal
   });
 })();
 
-// ── Tips ロジック ──
+// ── Tips サブタブフィルタリング ──
 (function () {
-  const CATS = {
-    chara:    { label: '⚔️ 強いキャラ', rankLabels: { S: 'S ランク', A: 'A ランク', B: 'B ランク' } },
-    augment:  { label: '💎 オーグメント', rankLabels: { S: '強い', A: '普通', B: '弱い' } },
-    strategy: { label: '🧠 立ち回り',   rankLabels: { S: '重要', A: '参考', B: 'メモ' } },
-    comp:     { label: '🏆 コンプ',      rankLabels: { S: 'S ランク', A: 'A ランク', B: 'B ランク' } },
-  };
-  const RANK_CSS = { S: 'tip-tag-s', A: 'tip-tag-a', B: 'tip-tag-b' };
+  const grid  = document.getElementById('tips-grid');
+  if (!grid) return;
 
-  let activeCat = 'chara';
-
-  function load(cat) { return JSON.parse(localStorage.getItem('tft_tips_' + cat) || '[]'); }
-  function save(cat, data) { localStorage.setItem('tft_tips_' + cat, JSON.stringify(data)); }
-
-  function today() {
-    return new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
-  }
-  function esc(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-  }
+  const cards = Array.from(grid.querySelectorAll('.tip-card'));
 
   function updateCounts() {
-    Object.keys(CATS).forEach(cat => {
-      const el = document.getElementById('cnt-' + cat);
-      if (el) el.textContent = '(' + load(cat).length + ')';
+    const totals = { all: cards.length, chara: 0, augment: 0, strategy: 0, comp: 0 };
+    cards.forEach(c => { const cat = c.dataset.cat; if (cat in totals) totals[cat]++; });
+    Object.keys(totals).forEach(k => {
+      const el = document.getElementById('cnt-' + k);
+      if (el) el.textContent = '(' + totals[k] + ')';
     });
   }
 
-  function render() {
-    const tips = load(activeCat);
-    const grid = document.getElementById('tips-grid');
-    updateCounts();
-
-    if (tips.length === 0) {
-      grid.innerHTML = '<div class="tips-empty">まだTipsがありません。下のフォームから追加してください。</div>';
-      return;
-    }
-
-    const rankLabels = CATS[activeCat].rankLabels;
-    grid.innerHTML = tips.map((t, i) => `
-      <div class="tip-card">
-        <div class="tip-tags">
-          <span class="tip-tag ${RANK_CSS[t.rank]}">${rankLabels[t.rank]}</span>
-          ${t.source ? `<span class="tip-tag tip-tag-source">📡 ${esc(t.source)}</span>` : ''}
-        </div>
-        <div class="tip-title">${esc(t.title)}</div>
-        <div class="tip-body">${esc(t.body)}</div>
-        <div class="tip-footer">
-          <span>${t.date}</span>
-          <button class="tip-del" data-i="${i}">🗑 削除</button>
-        </div>
-      </div>
-    `).join('');
-
-    grid.querySelectorAll('.tip-del').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.i);
-        if (!confirm('このTipsを削除しますか？')) return;
-        const arr = load(activeCat);
-        arr.splice(i, 1);
-        save(activeCat, arr);
-        render();
-      });
+  function filterByCat(cat) {
+    cards.forEach(c => {
+      c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
     });
   }
 
@@ -1201,25 +1193,9 @@ title: TFT My Portal
     if (!btn) return;
     document.querySelectorAll('.tips-subtab-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    activeCat = btn.dataset.cat;
-    render();
+    filterByCat(btn.dataset.cat);
   });
 
-  document.getElementById('btn-tip-add').addEventListener('click', () => {
-    const title  = document.getElementById('tip-title').value.trim();
-    const body   = document.getElementById('tip-body').value.trim();
-    const rank   = document.getElementById('tip-rank').value;
-    const source = document.getElementById('tip-source').value.trim();
-    if (!title || !body) { alert('タイトルと内容を入力してください'); return; }
-    const arr = load(activeCat);
-    arr.unshift({ title, body, rank, source, date: today() });
-    save(activeCat, arr);
-    render();
-    document.getElementById('tip-title').value  = '';
-    document.getElementById('tip-body').value   = '';
-    document.getElementById('tip-source').value = '';
-  });
-
-  render();
+  updateCounts();
 })();
 </script>
