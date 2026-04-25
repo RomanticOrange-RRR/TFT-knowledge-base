@@ -472,12 +472,160 @@ title: TFT My Portal
     border-bottom: 1px solid var(--border);
   }
   .sites-section-title:first-child { margin-top: 0; }
+
+  /* ── Tips タブ ── */
+  .tips-subtab-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .tips-subtab-btn {
+    padding: 0.45rem 1.1rem;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.02em;
+  }
+  .tips-subtab-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .tips-subtab-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #07090f;
+    border-color: transparent;
+    box-shadow: var(--glow-gold);
+  }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  }
+  .tip-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(200,155,60,0.05), transparent 60%);
+    pointer-events: none;
+  }
+  .tip-card:hover {
+    border-color: var(--gold);
+    box-shadow: var(--glow-gold), 0 8px 32px rgba(0,0,0,0.5);
+    transform: translateY(-3px);
+  }
+  .tip-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tip-tag {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  .tip-tag-s      { background: rgba(229,57,53,0.15);  color: #ef9a9a; box-shadow: 0 0 8px rgba(229,57,53,0.2); }
+  .tip-tag-a      { background: rgba(200,155,60,0.15); color: #e8c97a; }
+  .tip-tag-b      { background: rgba(77,168,255,0.15); color: #90caf9; }
+  .tip-tag-source { background: rgba(167,139,250,0.15); color: #ce93d8; }
+  .tip-title      { font-weight: 700; font-size: 0.92rem; color: var(--text); line-height: 1.4; }
+  .tip-body       { font-size: 0.8rem; color: #7a8fb0; line-height: 1.65; flex: 1; white-space: pre-wrap; }
+  .tip-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+  .tip-del {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.78rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    transition: color 0.15s;
+  }
+  .tip-del:hover { color: var(--red); }
+
+  .tips-add-form {
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+  }
+  .tips-add-form h4 {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.9rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .tips-form-row { display: flex; gap: 0.65rem; margin-bottom: 0.65rem; flex-wrap: wrap; }
+  .tips-form-row input,
+  .tips-form-row select,
+  .tips-form-row textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.88rem;
+    font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .tips-form-row input::placeholder,
+  .tips-form-row textarea::placeholder { color: var(--text-muted); }
+  .tips-form-row input:focus,
+  .tips-form-row select:focus,
+  .tips-form-row textarea:focus { outline: none; border-color: var(--gold); box-shadow: var(--glow-gold); }
+  .tips-form-row input.f-title { flex: 1; min-width: 180px; }
+  .tips-form-row select { min-width: 120px; }
+  .tips-form-row textarea { width: 100%; min-height: 76px; resize: vertical; }
+  .tips-form-row select option { background: var(--surface); }
+  .btn-tips-add {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #07090f;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+    white-space: nowrap;
+  }
+  .btn-tips-add:hover { box-shadow: var(--glow-gold); }
+  .tips-empty {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    grid-column: 1 / -1;
+  }
 </style>
 
 {% assign knowledge_pages = site.pages | where_exp: "p", "p.path contains 'knowledge/'" | where_exp: "p", "p.media_type != 'qa'" | sort: "date" | reverse %}
 
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="knowledge">📚 ナレッジ</button>
+  <button class="tab-btn" data-tab="tips">💡 Tips</button>
   <button class="tab-btn" data-tab="sites">🌐 攻略サイト</button>
 </div>
 
@@ -574,6 +722,36 @@ title: TFT My Portal
 </div>
 <p class="no-results" id="no-results" style="display:none">該当するナレッジが見つかりません。</p>
 </div><!-- /tab-knowledge -->
+
+<div id="tab-tips" style="display:none">
+  <div class="tips-subtab-bar" id="tips-subtabs">
+    <button class="tips-subtab-btn active" data-cat="chara">⚔️ 強いキャラ <span class="tips-cnt" id="cnt-chara"></span></button>
+    <button class="tips-subtab-btn" data-cat="augment">💎 オーグメント <span class="tips-cnt" id="cnt-augment"></span></button>
+    <button class="tips-subtab-btn" data-cat="strategy">🧠 立ち回り <span class="tips-cnt" id="cnt-strategy"></span></button>
+    <button class="tips-subtab-btn" data-cat="comp">🏆 コンプ <span class="tips-cnt" id="cnt-comp"></span></button>
+  </div>
+
+  <div class="tips-grid" id="tips-grid"></div>
+
+  <div class="tips-add-form">
+    <h4>+ Tips を追加</h4>
+    <div class="tips-form-row">
+      <input class="f-title" id="tip-title" type="text" placeholder="タイトル（例: ジン、ジュジュツカイセン、慎重ロールダウン）">
+      <select id="tip-rank">
+        <option value="S">S（超強い）</option>
+        <option value="A" selected>A（強い）</option>
+        <option value="B">B（参考）</option>
+      </select>
+    </div>
+    <div class="tips-form-row">
+      <textarea id="tip-body" placeholder="内容を入力（改行OK）"></textarea>
+    </div>
+    <div class="tips-form-row">
+      <input id="tip-source" type="text" placeholder="出典（例: EWC大会 2025/04）" style="flex:1">
+      <button class="btn-tips-add" id="btn-tip-add">追加</button>
+    </div>
+  </div>
+</div><!-- /tab-tips -->
 
 <div id="tab-sites" style="display:none">
   <p class="sites-section-title">📊 メタ・統計サイト</p>
@@ -946,7 +1124,102 @@ title: TFT My Portal
     btn.classList.add('active');
     const tab = btn.dataset.tab;
     document.getElementById('tab-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
+    document.getElementById('tab-tips').style.display      = tab === 'tips'      ? '' : 'none';
     document.getElementById('tab-sites').style.display     = tab === 'sites'     ? '' : 'none';
   });
+})();
+
+// ── Tips ロジック ──
+(function () {
+  const CATS = {
+    chara:    { label: '⚔️ 強いキャラ', rankLabels: { S: 'S ランク', A: 'A ランク', B: 'B ランク' } },
+    augment:  { label: '💎 オーグメント', rankLabels: { S: '強い', A: '普通', B: '弱い' } },
+    strategy: { label: '🧠 立ち回り',   rankLabels: { S: '重要', A: '参考', B: 'メモ' } },
+    comp:     { label: '🏆 コンプ',      rankLabels: { S: 'S ランク', A: 'A ランク', B: 'B ランク' } },
+  };
+  const RANK_CSS = { S: 'tip-tag-s', A: 'tip-tag-a', B: 'tip-tag-b' };
+
+  let activeCat = 'chara';
+
+  function load(cat) { return JSON.parse(localStorage.getItem('tft_tips_' + cat) || '[]'); }
+  function save(cat, data) { localStorage.setItem('tft_tips_' + cat, JSON.stringify(data)); }
+
+  function today() {
+    return new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  }
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  function updateCounts() {
+    Object.keys(CATS).forEach(cat => {
+      const el = document.getElementById('cnt-' + cat);
+      if (el) el.textContent = '(' + load(cat).length + ')';
+    });
+  }
+
+  function render() {
+    const tips = load(activeCat);
+    const grid = document.getElementById('tips-grid');
+    updateCounts();
+
+    if (tips.length === 0) {
+      grid.innerHTML = '<div class="tips-empty">まだTipsがありません。下のフォームから追加してください。</div>';
+      return;
+    }
+
+    const rankLabels = CATS[activeCat].rankLabels;
+    grid.innerHTML = tips.map((t, i) => `
+      <div class="tip-card">
+        <div class="tip-tags">
+          <span class="tip-tag ${RANK_CSS[t.rank]}">${rankLabels[t.rank]}</span>
+          ${t.source ? `<span class="tip-tag tip-tag-source">📡 ${esc(t.source)}</span>` : ''}
+        </div>
+        <div class="tip-title">${esc(t.title)}</div>
+        <div class="tip-body">${esc(t.body)}</div>
+        <div class="tip-footer">
+          <span>${t.date}</span>
+          <button class="tip-del" data-i="${i}">🗑 削除</button>
+        </div>
+      </div>
+    `).join('');
+
+    grid.querySelectorAll('.tip-del').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.dataset.i);
+        if (!confirm('このTipsを削除しますか？')) return;
+        const arr = load(activeCat);
+        arr.splice(i, 1);
+        save(activeCat, arr);
+        render();
+      });
+    });
+  }
+
+  document.getElementById('tips-subtabs').addEventListener('click', e => {
+    const btn = e.target.closest('.tips-subtab-btn');
+    if (!btn) return;
+    document.querySelectorAll('.tips-subtab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = btn.dataset.cat;
+    render();
+  });
+
+  document.getElementById('btn-tip-add').addEventListener('click', () => {
+    const title  = document.getElementById('tip-title').value.trim();
+    const body   = document.getElementById('tip-body').value.trim();
+    const rank   = document.getElementById('tip-rank').value;
+    const source = document.getElementById('tip-source').value.trim();
+    if (!title || !body) { alert('タイトルと内容を入力してください'); return; }
+    const arr = load(activeCat);
+    arr.unshift({ title, body, rank, source, date: today() });
+    save(activeCat, arr);
+    render();
+    document.getElementById('tip-title').value  = '';
+    document.getElementById('tip-body').value   = '';
+    document.getElementById('tip-source').value = '';
+  });
+
+  render();
 })();
 </script>
