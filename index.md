@@ -501,8 +501,8 @@ title: TFT My Portal
   }
   .tips-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.1rem;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
     margin-bottom: 1.5rem;
   }
   .tip-card {
@@ -529,18 +529,30 @@ title: TFT My Portal
     box-shadow: var(--glow-gold), 0 8px 32px rgba(0,0,0,0.5);
     transform: translateY(-3px);
   }
-  .tip-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tip-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
   .tip-tag {
     font-size: 0.68rem;
-    padding: 0.15rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 800;
-    letter-spacing: 0.04em;
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    background: rgba(200,155,60,0.12);
+    color: var(--gold);
+    border: 1px solid rgba(200,155,60,0.25);
+    cursor: pointer;
+    transition: all 0.15s;
   }
-  .tip-tag-s      { background: rgba(229,57,53,0.15);  color: #ef9a9a; box-shadow: 0 0 8px rgba(229,57,53,0.2); }
-  .tip-tag-a      { background: rgba(200,155,60,0.15); color: #e8c97a; }
-  .tip-tag-b      { background: rgba(77,168,255,0.15); color: #90caf9; }
-  .tip-tag-source { background: rgba(167,139,250,0.15); color: #ce93d8; }
+  .tip-tag:hover { background: rgba(200,155,60,0.25); }
+  .tip-tag.active { background: var(--gold); color: #07090f; }
+  .tip-tag-source { background: rgba(167,139,250,0.12); color: #ce93d8; border-color: rgba(167,139,250,0.25); cursor: default; }
+  .tip-tag-source:hover { background: rgba(167,139,250,0.12); }
+  .tips-tag-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    align-items: center;
+  }
   .tip-title      { font-weight: 700; font-size: 0.92rem; color: var(--text); line-height: 1.4; }
   .tip-body       { font-size: 0.8rem; color: #7a8fb0; line-height: 1.65; flex: 1; white-space: pre-wrap; }
   .tip-footer {
@@ -725,13 +737,11 @@ title: TFT My Portal
 </div><!-- /tab-knowledge -->
 
 <div id="tab-tips" style="display:none">
-  <div class="tips-subtab-bar" id="tips-subtabs">
-    <button class="tips-subtab-btn active" data-cat="all">すべて <span id="cnt-all"></span></button>
-    <button class="tips-subtab-btn" data-cat="chara">⚔️ 強いキャラ <span id="cnt-chara"></span></button>
-    <button class="tips-subtab-btn" data-cat="augment">💎 オーグメント <span id="cnt-augment"></span></button>
-    <button class="tips-subtab-btn" data-cat="strategy">🧠 立ち回り <span id="cnt-strategy"></span></button>
-    <button class="tips-subtab-btn" data-cat="comp">🏆 コンプ <span id="cnt-comp"></span></button>
+  <div class="db-toolbar" style="margin-bottom:0.75rem">
+    <input type="text" id="tips-search" placeholder="Tipsを検索...">
+    <span class="db-count" id="tips-count"></span>
   </div>
+  <div class="tips-tag-filters" id="tips-tag-filters"></div>
 
   <div class="tips-grid" id="tips-grid">
   {% if tips_pages.size == 0 %}
@@ -740,26 +750,24 @@ title: TFT My Portal
     </div>
   {% else %}
     {% for p in tips_pages %}
+    {% assign tag_str = p.tags | join: "," | downcase %}
     <div class="tip-card"
-      data-cat="{{ p.tips_category | default: 'strategy' }}"
-      data-rank="{{ p.rank | default: 'A' }}"
+      data-title="{{ p.title | downcase }}"
+      data-body="{{ p.body | downcase }}"
+      data-tags="{{ tag_str }}"
     >
-      {% if p.source and p.source != "" %}
       <div class="tip-tags">
+        {% for tag in p.tags %}
+        <span class="tip-tag" data-tag="{{ tag | downcase }}">{{ tag }}</span>
+        {% endfor %}
+        {% if p.source and p.source != "" %}
         <span class="tip-tag tip-tag-source">📡 {{ p.source }}</span>
+        {% endif %}
       </div>
-      {% endif %}
       <div class="tip-title">{{ p.title }}</div>
       <div class="tip-body">{{ p.body | newline_to_br }}</div>
       <div class="tip-footer">
         <span>{{ p.date | date: "%Y-%m-%d" }}</span>
-        <span style="font-size:0.7rem;color:var(--text-muted)">
-          {% if cat == 'chara' %}⚔️ 強いキャラ
-          {% elsif cat == 'augment' %}💎 オーグメント
-          {% elsif cat == 'strategy' %}🧠 立ち回り
-          {% elsif cat == 'comp' %}🏆 コンプ
-          {% endif %}
-        </span>
       </div>
     </div>
     {% endfor %}
@@ -770,7 +778,7 @@ title: TFT My Portal
     <h4>💬 Discord から追加する方法</h4>
     <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.8;padding:0.5rem 0">
       TFT Bot に <strong style="color:var(--text)">@bot tip [内容]</strong> と送るだけで自動で保存されます。<br>
-      <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip ジンはSランク。スペルシェイパー2との相性が抜群</code><br>
+      <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip アニマの当たり武器はバトルバニークロスボウ</code><br>
       <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip 8-1ロールダウンはHP80以上の時だけ行う</code>
     </div>
   </div>
@@ -1152,36 +1160,73 @@ title: TFT My Portal
   });
 })();
 
-// ── Tips サブタブフィルタリング ──
+// ── Tips 検索＋タグフィルター ──
 (function () {
-  const grid  = document.getElementById('tips-grid');
-  if (!grid) return;
+  const grid       = document.getElementById('tips-grid');
+  const input      = document.getElementById('tips-search');
+  const countEl    = document.getElementById('tips-count');
+  const tagFilters = document.getElementById('tips-tag-filters');
+  if (!grid || !input) return;
 
   const cards = Array.from(grid.querySelectorAll('.tip-card'));
+  let activeTag = 'all';
 
-  function updateCounts() {
-    const totals = { all: cards.length, chara: 0, augment: 0, strategy: 0, comp: 0 };
-    cards.forEach(c => { const cat = c.dataset.cat; if (cat in totals) totals[cat]++; });
-    Object.keys(totals).forEach(k => {
-      const el = document.getElementById('cnt-' + k);
-      if (el) el.textContent = '(' + totals[k] + ')';
-    });
-  }
-
-  function filterByCat(cat) {
-    cards.forEach(c => {
-      c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none';
-    });
-  }
-
-  document.getElementById('tips-subtabs').addEventListener('click', e => {
-    const btn = e.target.closest('.tips-subtab-btn');
-    if (!btn) return;
-    document.querySelectorAll('.tips-subtab-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    filterByCat(btn.dataset.cat);
+  // タグ一覧を収集して「すべて」＋各タグボタンを生成
+  const tagSet = new Set();
+  cards.forEach(c => {
+    (c.dataset.tags || '').split(',').forEach(t => { if (t.trim()) tagSet.add(t.trim()); });
   });
 
-  updateCounts();
+  const allBtn = document.createElement('button');
+  allBtn.className = 'tag-btn active';
+  allBtn.textContent = 'すべて';
+  allBtn.dataset.tag = 'all';
+  tagFilters.appendChild(allBtn);
+
+  tagSet.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn';
+    btn.textContent = tag;
+    btn.dataset.tag = tag;
+    tagFilters.appendChild(btn);
+  });
+
+  function filter() {
+    const q = input.value.toLowerCase();
+    let visible = 0;
+    cards.forEach(c => {
+      const tagMatch  = activeTag === 'all' || (c.dataset.tags || '').split(',').includes(activeTag);
+      const textMatch = !q || c.dataset.title.includes(q) || c.dataset.body.includes(q);
+      const show = tagMatch && textMatch;
+      c.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    countEl.textContent = visible + ' / ' + cards.length + ' 件';
+  }
+
+  tagFilters.addEventListener('click', e => {
+    const btn = e.target.closest('.tag-btn');
+    if (!btn) return;
+    tagFilters.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeTag = btn.dataset.tag;
+    filter();
+  });
+
+  // カード上のタグをクリックしてもフィルター
+  grid.addEventListener('click', e => {
+    const tag = e.target.closest('.tip-tag:not(.tip-tag-source)');
+    if (!tag) return;
+    const t = tag.dataset.tag;
+    if (!t) return;
+    tagFilters.querySelectorAll('.tag-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tag === t);
+    });
+    activeTag = t;
+    filter();
+  });
+
+  input.addEventListener('input', filter);
+  filter();
 })();
 </script>
