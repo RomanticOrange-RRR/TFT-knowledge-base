@@ -744,22 +744,11 @@ title: TFT My Portal
       data-cat="{{ p.tips_category | default: 'strategy' }}"
       data-rank="{{ p.rank | default: 'A' }}"
     >
+      {% if p.source and p.source != "" %}
       <div class="tip-tags">
-        {% assign rank = p.rank | default: 'A' %}
-        {% assign cat  = p.tips_category | default: 'strategy' %}
-        {% if rank == 'S' %}<span class="tip-tag tip-tag-s">
-          {% if cat == 'chara' or cat == 'comp' %}S ランク{% elsif cat == 'augment' %}強い{% else %}重要{% endif %}
-        </span>
-        {% elsif rank == 'A' %}<span class="tip-tag tip-tag-a">
-          {% if cat == 'chara' or cat == 'comp' %}A ランク{% elsif cat == 'augment' %}普通{% else %}参考{% endif %}
-        </span>
-        {% else %}<span class="tip-tag tip-tag-b">
-          {% if cat == 'chara' or cat == 'comp' %}B ランク{% elsif cat == 'augment' %}弱い{% else %}メモ{% endif %}
-        </span>{% endif %}
-        {% if p.source and p.source != "" %}
         <span class="tip-tag tip-tag-source">📡 {{ p.source }}</span>
-        {% endif %}
       </div>
+      {% endif %}
       <div class="tip-title">{{ p.title }}</div>
       <div class="tip-body">{{ p.body | newline_to_br }}</div>
       <div class="tip-footer">
