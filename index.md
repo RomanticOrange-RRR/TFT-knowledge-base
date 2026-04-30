@@ -474,13 +474,13 @@ title: TFT My Portal
   .sites-section-title:first-child { margin-top: 0; }
 
   /* ── Tips タブ ── */
-  .tips-subtab-bar {
+  .tips-cat-bar {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     flex-wrap: wrap;
   }
-  .tips-subtab-btn {
+  .tips-cat-btn {
     padding: 0.45rem 1.1rem;
     border-radius: 20px;
     border: 1px solid var(--border);
@@ -492,8 +492,8 @@ title: TFT My Portal
     transition: all 0.18s;
     letter-spacing: 0.02em;
   }
-  .tips-subtab-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .tips-subtab-btn.active {
+  .tips-cat-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .tips-cat-btn.active {
     background: linear-gradient(135deg, var(--gold), var(--gold-light));
     color: #07090f;
     border-color: transparent;
@@ -501,7 +501,7 @@ title: TFT My Portal
   }
   .tips-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 0.85rem;
     margin-bottom: 1.5rem;
   }
@@ -529,7 +529,17 @@ title: TFT My Portal
     box-shadow: var(--glow-gold), 0 8px 32px rgba(0,0,0,0.5);
     transform: translateY(-3px);
   }
-  .tip-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.3rem; }
+  .tip-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.3rem; align-items: center; }
+  .tip-rank {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  .tip-rank-s { background: rgba(229,57,53,0.2); color: #ef9a9a; border: 1px solid rgba(229,57,53,0.4); }
+  .tip-rank-a { background: rgba(200,155,60,0.2); color: var(--gold); border: 1px solid rgba(200,155,60,0.35); }
+  .tip-rank-b { background: rgba(77,168,255,0.15); color: var(--blue); border: 1px solid rgba(77,168,255,0.3); }
   .tip-tag {
     font-size: 0.68rem;
     padding: 0.15rem 0.55rem;
@@ -539,13 +549,8 @@ title: TFT My Portal
     background: rgba(200,155,60,0.12);
     color: var(--gold);
     border: 1px solid rgba(200,155,60,0.25);
-    cursor: pointer;
-    transition: all 0.15s;
   }
-  .tip-tag:hover { background: rgba(200,155,60,0.25); }
-  .tip-tag.active { background: var(--gold); color: #07090f; }
-  .tip-tag-source { background: rgba(167,139,250,0.12); color: #ce93d8; border-color: rgba(167,139,250,0.25); cursor: default; }
-  .tip-tag-source:hover { background: rgba(167,139,250,0.12); }
+  .tip-tag-source { background: rgba(167,139,250,0.12); color: #ce93d8; border-color: rgba(167,139,250,0.25); }
   .tips-tag-filters {
     display: flex;
     gap: 0.5rem;
@@ -564,23 +569,12 @@ title: TFT My Portal
     font-size: 0.72rem;
     color: var(--text-muted);
   }
-  .tip-del {
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 0.78rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    transition: color 0.15s;
-  }
-  .tip-del:hover { color: var(--red); }
-
   .tips-add-form {
     background: var(--surface);
     border: 1px dashed var(--border);
     border-radius: 10px;
     padding: 1.1rem 1.2rem;
+    margin-top: 0.5rem;
   }
   .tips-add-form h4 {
     font-size: 0.82rem;
@@ -589,41 +583,6 @@ title: TFT My Portal
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
-  .tips-form-row { display: flex; gap: 0.65rem; margin-bottom: 0.65rem; flex-wrap: wrap; }
-  .tips-form-row input,
-  .tips-form-row select,
-  .tips-form-row textarea {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--text);
-    padding: 0.5rem 0.75rem;
-    font-size: 0.88rem;
-    font-family: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  .tips-form-row input::placeholder,
-  .tips-form-row textarea::placeholder { color: var(--text-muted); }
-  .tips-form-row input:focus,
-  .tips-form-row select:focus,
-  .tips-form-row textarea:focus { outline: none; border-color: var(--gold); box-shadow: var(--glow-gold); }
-  .tips-form-row input.f-title { flex: 1; min-width: 180px; }
-  .tips-form-row select { min-width: 120px; }
-  .tips-form-row textarea { width: 100%; min-height: 76px; resize: vertical; }
-  .tips-form-row select option { background: var(--surface); }
-  .btn-tips-add {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: #07090f;
-    border: none;
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.88rem;
-    cursor: pointer;
-    transition: box-shadow 0.2s;
-    white-space: nowrap;
-  }
-  .btn-tips-add:hover { box-shadow: var(--glow-gold); }
   .tips-empty {
     text-align: center;
     padding: 2.5rem 1rem;
@@ -741,24 +700,39 @@ title: TFT My Portal
     <input type="text" id="tips-search" placeholder="Tipsを検索...">
     <span class="db-count" id="tips-count"></span>
   </div>
-  <div class="tips-tag-filters" id="tips-tag-filters"></div>
+
+  <!-- カテゴリサブタブ -->
+  <div class="tips-cat-bar" id="tips-cat-bar">
+    <button class="tips-cat-btn active" data-cat="all">📋 すべて</button>
+    <button class="tips-cat-btn" data-cat="chara">⚔️ 強いキャラ</button>
+    <button class="tips-cat-btn" data-cat="augment">💎 オーグメント</button>
+    <button class="tips-cat-btn" data-cat="strategy">🧠 立ち回り</button>
+    <button class="tips-cat-btn" data-cat="comp">🏆 コンプ</button>
+  </div>
 
   <div class="tips-grid" id="tips-grid">
   {% if tips_pages.size == 0 %}
-    <div class="tips-empty" style="grid-column:1/-1">
+    <div class="tips-empty">
       まだTipsがありません。DiscordでBotに <code>@bot tip [内容]</code> と送ると自動で追加されます。
     </div>
   {% else %}
     {% for p in tips_pages %}
     {% assign tag_str = p.tags | join: "," | downcase %}
+    {% assign cat = p.category | default: "strategy" %}
+    {% assign rnk = p.rank | default: "A" %}
     <div class="tip-card"
       data-title="{{ p.title | downcase }}"
       data-body="{{ p.body | downcase }}"
       data-tags="{{ tag_str }}"
+      data-cat="{{ cat }}"
+      data-rank="{{ rnk }}"
     >
-      <div class="tip-tags">
+      <div class="tip-badges">
+        {% if rnk == "S" %}<span class="tip-rank tip-rank-s">S</span>
+        {% elsif rnk == "A" %}<span class="tip-rank tip-rank-a">A</span>
+        {% else %}<span class="tip-rank tip-rank-b">B</span>{% endif %}
         {% for tag in p.tags %}
-        <span class="tip-tag" data-tag="{{ tag | downcase }}">{{ tag }}</span>
+        <span class="tip-tag">{{ tag }}</span>
         {% endfor %}
         {% if p.source and p.source != "" %}
         <span class="tip-tag tip-tag-source">📡 {{ p.source }}</span>
@@ -774,12 +748,13 @@ title: TFT My Portal
   {% endif %}
   </div>
 
-  <div class="tips-add-form" style="margin-top:1.5rem">
+  <div class="tips-add-form">
     <h4>💬 Discord から追加する方法</h4>
     <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.8;padding:0.5rem 0">
       TFT Bot に <strong style="color:var(--text)">@bot tip [内容]</strong> と送るだけで自動で保存されます。<br>
+      配信URLを送る場合は <strong style="color:var(--text)">@bot transcribe [URL]</strong><br>
       <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip アニマの当たり武器はバトルバニークロスボウ</code><br>
-      <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">tip 8-1ロールダウンはHP80以上の時だけ行う</code>
+      <code style="background:var(--bg);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.82rem">transcribe https://www.twitch.tv/videos/...</code>
     </div>
   </div>
 </div><!-- /tab-tips -->
@@ -1160,69 +1135,36 @@ title: TFT My Portal
   });
 })();
 
-// ── Tips 検索＋タグフィルター ──
+// ── Tips 検索＋カテゴリフィルター ──
 (function () {
-  const grid       = document.getElementById('tips-grid');
-  const input      = document.getElementById('tips-search');
-  const countEl    = document.getElementById('tips-count');
-  const tagFilters = document.getElementById('tips-tag-filters');
+  const grid    = document.getElementById('tips-grid');
+  const input   = document.getElementById('tips-search');
+  const countEl = document.getElementById('tips-count');
+  const catBar  = document.getElementById('tips-cat-bar');
   if (!grid || !input) return;
 
   const cards = Array.from(grid.querySelectorAll('.tip-card'));
-  let activeTag = 'all';
-
-  // タグ一覧を収集して「すべて」＋各タグボタンを生成
-  const tagSet = new Set();
-  cards.forEach(c => {
-    (c.dataset.tags || '').split(',').forEach(t => { if (t.trim()) tagSet.add(t.trim()); });
-  });
-
-  const allBtn = document.createElement('button');
-  allBtn.className = 'tag-btn active';
-  allBtn.textContent = 'すべて';
-  allBtn.dataset.tag = 'all';
-  tagFilters.appendChild(allBtn);
-
-  tagSet.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'tag-btn';
-    btn.textContent = tag;
-    btn.dataset.tag = tag;
-    tagFilters.appendChild(btn);
-  });
+  let activeCat = 'all';
 
   function filter() {
     const q = input.value.toLowerCase();
     let visible = 0;
     cards.forEach(c => {
-      const tagMatch  = activeTag === 'all' || (c.dataset.tags || '').split(',').includes(activeTag);
+      const catMatch  = activeCat === 'all' || c.dataset.cat === activeCat;
       const textMatch = !q || c.dataset.title.includes(q) || c.dataset.body.includes(q);
-      const show = tagMatch && textMatch;
+      const show = catMatch && textMatch;
       c.style.display = show ? '' : 'none';
       if (show) visible++;
     });
     countEl.textContent = visible + ' / ' + cards.length + ' 件';
   }
 
-  tagFilters.addEventListener('click', e => {
-    const btn = e.target.closest('.tag-btn');
+  catBar.addEventListener('click', e => {
+    const btn = e.target.closest('.tips-cat-btn');
     if (!btn) return;
-    tagFilters.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+    catBar.querySelectorAll('.tips-cat-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    activeTag = btn.dataset.tag;
-    filter();
-  });
-
-  // カード上のタグをクリックしてもフィルター
-  grid.addEventListener('click', e => {
-    const tag = e.target.closest('.tip-tag:not(.tip-tag-source)');
-    if (!tag) return;
-    const t = tag.dataset.tag;
-    if (!t) return;
-    tagFilters.querySelectorAll('.tag-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.tag === t);
-    });
-    activeTag = t;
+    activeCat = btn.dataset.cat;
     filter();
   });
 
