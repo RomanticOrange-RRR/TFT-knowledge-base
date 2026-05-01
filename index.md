@@ -710,6 +710,8 @@ title: TFT My Portal
     <button class="tips-cat-btn" data-cat="comp">🏆 コンプ</button>
   </div>
 
+  <div class="tips-tag-filters" id="tips-tag-filters"></div>
+
   <div class="tips-grid" id="tips-grid">
   {% if tips_pages.size == 0 %}
     <div class="tips-empty">
@@ -719,18 +721,16 @@ title: TFT My Portal
     {% for p in tips_pages %}
     {% assign tag_str = p.tags | join: "," | downcase %}
     {% assign cat = p.category | default: "strategy" %}
-    {% assign rnk = p.rank | default: "A" %}
     <div class="tip-card"
       data-title="{{ p.title | downcase }}"
       data-body="{{ p.body | downcase }}"
       data-tags="{{ tag_str }}"
       data-cat="{{ cat }}"
-      data-rank="{{ rnk }}"
+      data-path="{{ p.path }}"
     >
+      <button class="btn-del" data-path="{{ p.path }}" data-title="{{ p.title }}">🗑 削除</button>
+      {% if p.tags.size > 0 or p.source and p.source != "" %}
       <div class="tip-badges">
-        {% if rnk == "S" %}<span class="tip-rank tip-rank-s">S</span>
-        {% elsif rnk == "A" %}<span class="tip-rank tip-rank-a">A</span>
-        {% else %}<span class="tip-rank tip-rank-b">B</span>{% endif %}
         {% for tag in p.tags %}
         <span class="tip-tag">{{ tag }}</span>
         {% endfor %}
@@ -738,6 +738,7 @@ title: TFT My Portal
         <span class="tip-tag tip-tag-source">📡 {{ p.source }}</span>
         {% endif %}
       </div>
+      {% endif %}
       <div class="tip-title">{{ p.title }}</div>
       <div class="tip-body">{{ p.body | newline_to_br }}</div>
       <div class="tip-footer">
@@ -1135,28 +1136,81 @@ title: TFT My Portal
   });
 })();
 
-// ── Tips 検索＋カテゴリフィルター ──
+// ── Tips 検索＋カテゴリ＋タグフィルター＋削除 ──
 (function () {
-  const grid    = document.getElementById('tips-grid');
-  const input   = document.getElementById('tips-search');
-  const countEl = document.getElementById('tips-count');
-  const catBar  = document.getElementById('tips-cat-bar');
+  const REPO   = 'RomanticOrange-RRR/TFT-knowledge-base';
+  const BRANCH = 'main';
+  const TOKEN_KEY = 'gh_delete_token';
+
+  const grid      = document.getElementById('tips-grid');
+  const input     = document.getElementById('tips-search');
+  const countEl   = document.getElementById('tips-count');
+  const catBar    = document.getElementById('tips-cat-bar');
+  const tagFilters = document.getElementById('tips-tag-filters');
   if (!grid || !input) return;
 
-  const cards = Array.from(grid.querySelectorAll('.tip-card'));
+  let tipCards = Array.from(grid.querySelectorAll('.tip-card'));
   let activeCat = 'all';
+  let activeTag = 'all';
+
+  function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+  // タグフィルターボタンを動的生成
+  const allTags = [...new Set(
+    tipCards.flatMap(c => (c.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean))
+  )].sort();
+
+  if (allTags.length > 0) {
+    const label = document.createElement('span');
+    label.className = 'filter-label';
+    label.textContent = 'タグ';
+    tagFilters.appendChild(label);
+
+    const allBtn = document.createElement('button');
+    allBtn.className = 'tag-btn active';
+    allBtn.dataset.tag = 'all';
+    allBtn.textContent = 'すべて';
+    tagFilters.appendChild(allBtn);
+
+    allTags.forEach(tag => {
+      const btn = document.createElement('button');
+      btn.className = 'tag-btn';
+      btn.dataset.tag = tag;
+      btn.textContent = tag;
+      tagFilters.appendChild(btn);
+    });
+
+    tagFilters.addEventListener('click', e => {
+      const btn = e.target.closest('.tag-btn');
+      if (!btn) return;
+      tagFilters.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTag = btn.dataset.tag;
+      filter();
+    });
+  }
+
+  function applyTipsTokenMode() {
+    if (getToken()) {
+      grid.classList.add('token-set');
+    } else {
+      grid.classList.remove('token-set');
+    }
+  }
 
   function filter() {
     const q = input.value.toLowerCase();
     let visible = 0;
-    cards.forEach(c => {
+    tipCards.forEach(c => {
       const catMatch  = activeCat === 'all' || c.dataset.cat === activeCat;
+      const tagMatch  = activeTag === 'all' ||
+        (c.dataset.tags || '').split(',').map(t => t.trim()).includes(activeTag);
       const textMatch = !q || c.dataset.title.includes(q) || c.dataset.body.includes(q);
-      const show = catMatch && textMatch;
+      const show = catMatch && tagMatch && textMatch;
       c.style.display = show ? '' : 'none';
       if (show) visible++;
     });
-    countEl.textContent = visible + ' / ' + cards.length + ' 件';
+    countEl.textContent = visible + ' / ' + tipCards.length + ' 件';
   }
 
   catBar.addEventListener('click', e => {
@@ -1168,7 +1222,49 @@ title: TFT My Portal
     filter();
   });
 
+  // Tips削除
+  grid.addEventListener('click', async e => {
+    const btn = e.target.closest('.btn-del');
+    if (!btn) return;
+    const token = getToken();
+    if (!token) return;
+    const path  = btn.dataset.path;
+    const title = btn.dataset.title;
+    const card  = btn.closest('.tip-card');
+    if (!confirm(`「${title}」を削除しますか？`)) return;
+    btn.textContent = '削除中...';
+    btn.disabled = true;
+    try {
+      const metaRes = await fetch(
+        `https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}`,
+        { headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' } }
+      );
+      if (!metaRes.ok) throw new Error(`SHA取得失敗: ${metaRes.status}`);
+      const meta = await metaRes.json();
+      const delRes = await fetch(
+        `https://api.github.com/repos/${REPO}/contents/${path}`,
+        {
+          method: 'DELETE',
+          headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `delete tip: ${path}`, sha: meta.sha, branch: BRANCH })
+        }
+      );
+      if (!delRes.ok) throw new Error(`削除失敗: ${delRes.status}`);
+      card.style.transition = 'opacity 0.3s';
+      card.style.opacity = '0';
+      setTimeout(() => { card.remove(); tipCards = tipCards.filter(c => c !== card); filter(); }, 300);
+    } catch (err) {
+      alert(`エラー: ${err.message}`);
+      btn.textContent = '🗑 削除';
+      btn.disabled = false;
+    }
+  });
+
+  // ナレッジタブの削除モードボタンと連動してTipsにも反映
+  document.getElementById('btn-token').addEventListener('click', applyTipsTokenMode);
+
   input.addEventListener('input', filter);
+  applyTipsTokenMode();
   filter();
 })();
 </script>
